@@ -1,0 +1,378 @@
+﻿<Window x:Class="DetailTrack.Technologists.Windows.TechnologistRequestDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Заявка: [Номер]"
+        Height="700"
+        Width="900"
+        WindowStartupLocation="CenterOwner"
+        Loaded="Window_Loaded">
+
+    <Grid Margin="15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid Margin="0,0,0,15">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <StackPanel>
+                <TextBlock x:Name="LblTitle"
+                           FontSize="18"
+                           FontWeight="Bold" />
+                <TextBlock x:Name="LblStatus"
+                           Foreground="#7F8C8D"
+                           Margin="0,5,0,0" />
+            </StackPanel>
+
+            <StackPanel Grid.Column="1"
+                        Orientation="Horizontal">
+                <Button x:Name="BtnAccept"
+                        Content="✅ Принять в работу"
+                        Background="#27AE60"
+                        Foreground="White"
+                        Padding="12,6"
+                        Click="BtnAccept_Click"
+                        Margin="0,0,10,0" />
+                <Button x:Name="BtnForward"
+                        Content="➡️ Передать программисту"
+                        ToolTipService.ShowDuration="10000"
+                        Background="#3498DB"
+                        Foreground="White"
+                        Padding="12,6"
+                        Click="BtnForward_Click" />
+            </StackPanel>
+        </Grid>
+
+        <ScrollViewer Grid.Row="1"
+                      VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+
+                <GroupBox Header="Информация"
+                          Margin="0,0,0,15">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Тип:"
+                                   FontWeight="Bold"
+                                   Grid.Row="0" />
+                        <TextBlock x:Name="LblType"
+                                   Grid.Row="0"
+                                   Grid.Column="1"
+                                   Margin="10,0,0,0" />
+
+                        <TextBlock Text="Конструктор:"
+                                   FontWeight="Bold"
+                                   Grid.Row="1" />
+                        <TextBlock x:Name="LblConstructor"
+                                   Grid.Row="1"
+                                   Grid.Column="1"
+                                   Margin="10,0,0,0" />
+
+                        <TextBlock Text="Программист:"
+                                   FontWeight="Bold"
+                                   Grid.Row="2" />
+                        <TextBlock x:Name="LblProgrammer"
+                                   Grid.Row="2"
+                                   Grid.Column="1"
+                                   Margin="10,0,0,0" />
+
+                        <TextBlock Text="Обработка:"
+                                   FontWeight="Bold"
+                                   Grid.Row="3" />
+                        <TextBlock x:Name="LblMachine"
+                                   Grid.Row="3"
+                                   Grid.Column="1"
+                                   Margin="10,0,0,0" />
+
+                        <TextBlock Text="Комментарий:"
+                                   FontWeight="Bold"
+                                   Grid.Row="4" />
+                        <TextBlock x:Name="LblComment"
+                                   Grid.Row="4"
+                                   Grid.Column="1"
+                                   Margin="10,0,0,0"
+                                   TextWrapping="Wrap" />
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="📐 Чертежи от конструктора"
+                          Margin="0,0,0,15">
+                    <StackPanel Margin="10">
+                        <ItemsControl x:Name="IcDrawings">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal"
+                                                Margin="0,5">
+                                        <Button Content="📥"
+                                                Width="30"
+                                                Margin="0,0,5,0"
+                                                Click="BtnDownloadDrawing_Click"
+                                                Tag="{Binding}" />
+                                        <TextBlock Text="{Binding FileName}"
+                                                   VerticalAlignment="Center" />
+                                        <TextBlock Text="{Binding UploadedAt, StringFormat='(dd.MM.yyyy)'}"
+                                                   Foreground="#7F8C8D"
+                                                   Margin="10,0,0,0"
+                                                   VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                        <TextBlock x:Name="LblNoDrawings"
+                                   Text="Нет прикреплённых чертежей"
+                                   Foreground="#7F8C8D"
+                                   FontStyle="Italic"
+                                   Margin="0,5,0,0" />
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="📋 Техпроцесс"
+                          x:Name="GrbTechProcessName"
+                          Margin="0,0,0,15">
+                    <StackPanel Margin="10">
+                        <StackPanel x:Name="PanelTechProcessLoaded"
+                                    Visibility="Collapsed">
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,0,0,10">
+                                <TextBlock Text="📄 "
+                                           Foreground="#27AE60" />
+                                <TextBlock x:Name="LblTechProcessName"
+                                           FontWeight="Bold"
+                                           VerticalAlignment="Center" />
+                                <Button Content="📥 Скачать"
+                                        Margin="15,0,0,0"
+                                        Padding="8,3"
+                                        Click="BtnDownloadTechProcess_Click" />
+                            </StackPanel>
+                            <TextBlock x:Name="LblTechProcessDate"
+                                       Foreground="#7F8C8D"
+                                       FontSize="11" />
+                        </StackPanel>
+
+                        <StackPanel x:Name="PanelTechProcessUpload">
+                            <TextBlock Text="Загрузить файл техпроцесса:"
+                                       Margin="0,0,0,5" />
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="📎 Выбрать файл"
+                                        Padding="10,5"
+                                        Click="BtnSelectTechProcess_Click" />
+                                <TextBlock x:Name="LblSelectedTechProcess"
+                                           Margin="10,0,0,0"
+                                           VerticalAlignment="Center"
+                                           Foreground="#2980B9" />
+                            </StackPanel>
+                            <Button Content="💾 Сохранить техпроцесс"
+                                    Margin="0,10,0,0"
+                                    x:Name="BtnSaveTechProcess"
+                                    Padding="12,6"
+                                    Background="#27AE60"
+                                    Foreground="White"
+                                    Click="BtnSaveTechProcess_Click" />
+                        </StackPanel>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="⚙️ Параметры обработки"
+                          Margin="0,0,0,15"
+                          x:Name="GrbPatameters">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="150" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Цех:"
+                                   FontWeight="Bold"
+                                   Grid.Row="0" />
+                        <ComboBox x:Name="CbWorkshop"
+                                  Grid.Row="0"
+                                  Grid.Column="1"
+                                  Margin="10,0,0,0"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="Id"
+                                  SelectionChanged="CbWorkshop_SelectionChanged" />
+
+                        <TextBlock Text="Тип станка:"
+                                   FontWeight="Bold"
+                                   Grid.Row="1" />
+                        <ComboBox x:Name="CbMachineType"
+                                  Grid.Row="1"
+                                  Grid.Column="1"
+                                  Margin="10,5,0,0"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="Id"
+                                  SelectionChanged="CbMachineType_SelectionChanged" />
+
+                        <TextBlock Text="Модель станка:"
+                                   FontWeight="Bold"
+                                   Grid.Row="2" />
+                        <ComboBox x:Name="CbMachineModel"
+                                  Grid.Row="2"
+                                  Grid.Column="1"
+                                  Margin="10,5,0,0"
+                                  SelectionChanged="CbMachineModel_SelectionChanged"
+                                  DisplayMemberPath="Name"
+                                  SelectedValuePath="Id" />
+                    </Grid>
+                </GroupBox>
+
+                <GroupBox Header="🔧 Заявки на инструмент"
+                          x:Name="GrbCreateToolRequest">
+                    <StackPanel Margin="10">
+                        <Button Content="➕ Создать заявку на инструмент"
+                                x:Name="BtnCreateToolRequest"
+                                HorizontalAlignment="Left"
+                                Padding="12,6"
+                                Background="#9B59B6"
+                                Foreground="White"
+                                Click="BtnCreateToolRequest_Click"
+                                Margin="0,0,0,10" />
+                        <ItemsControl x:Name="IcToolRequests">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#ECF0F1"
+                                            BorderThickness="1"
+                                            Padding="10"
+                                            Margin="0,5">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding ToolName}"
+                                                           FontWeight="Bold" />
+                                                <TextBlock>
+                                                    <Run Text="Статус:"
+                                                         Foreground="#7F8C8D" />
+                                                    <Run Text="{Binding Status}"
+                                                         Foreground="#2980B9" />
+                                                </TextBlock>
+                                                <TextBlock Text="{Binding Comment}"
+                                                           Foreground="#7F8C8D"
+                                                           FontSize="11"
+                                                           TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <TextBlock Grid.Column="1"
+                                                       Text="{Binding CreatedAt, StringFormat='dd.MM.yyyy'}"
+                                                       Foreground="#7F8C8D"
+                                                       VerticalAlignment="Top" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="💬 Комментарии инженера по инструментам"
+                          Margin="0,0,0,15">
+                    <StackPanel Margin="10">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      MaxHeight="220"
+                                      Padding="2">
+                            <ItemsControl x:Name="IcToolEngineerComments">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border BorderBrush="#ECF0F1"
+                                                BorderThickness="0,0,0,1"
+                                                Padding="0,8">
+                                            <StackPanel>
+                                                <TextBlock>
+                                                    <Run Text="{Binding User.FullName}"
+                                                         FontWeight="Bold"
+                                                         Foreground="#16A085" />
+                                                    <Run Text="{Binding CreatedAt, StringFormat=' (dd.MM.yyyy HH:mm)'}"
+                                                         Foreground="#95A5A6" />
+                                                </TextBlock>
+                                                <TextBlock Margin="0,2,0,4"
+                                                           Foreground="#7F8C8D"
+                                                           FontSize="11">
+                                                    <Run Text="Заявка на инструмент: " />
+                                                    <Run Text="{Binding ToolRequest.ToolName}"
+                                                         FontWeight="SemiBold" />
+                                                </TextBlock>
+                                                <TextBlock Text="{Binding Text}"
+                                                           TextWrapping="Wrap" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+                        <TextBlock x:Name="LblNoToolEngineerComments"
+                                   Text="Комментариев от инженера по оснастке пока нет"
+                                   Foreground="#7F8C8D"
+                                   FontStyle="Italic"
+                                   Margin="0,5,0,0" />
+                    </StackPanel>
+                </GroupBox>
+
+                <GroupBox Header="📜 История изменений">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                  MaxHeight="200"
+                                  Padding="2">
+                        <ItemsControl x:Name="IcHistory">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="#ECF0F1"
+                                            BorderThickness="0,0,0,1"
+                                            Padding="0,8">
+                                        <StackPanel>
+                                            <TextBlock>
+                <Run Text="{Binding ChangedAt, StringFormat='dd.MM.yyyy HH:mm'}"
+                                                FontWeight="Bold" />
+                <Run Text=" → " />
+                <Run Text="{Binding NewStatus}"
+                                                Foreground="#2980B9" />
+                                            </TextBlock>
+                                            <TextBlock Text="{Binding Comment}"
+                                                       Foreground="#7F8C8D"
+                                                       FontSize="11"
+                                                       TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding ChangedBy.FullName}"
+                                                       Foreground="#95A5A6"
+                                                       FontSize="10" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </GroupBox>
+
+            </StackPanel>
+        </ScrollViewer>
+
+        <Button Grid.Row="2"
+                Content="Закрыть"
+                HorizontalAlignment="Right"
+                Width="100"
+                Height="35"
+                Margin="0,15,0,0"
+                Click="BtnClose_Click" />
+    </Grid>
+</Window>
